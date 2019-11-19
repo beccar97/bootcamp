@@ -31,23 +31,24 @@ public class Main {
                 }
             }
 
-            if (outputWords.isEmpty()) {
-                System.out.println(i);
-            } else {
-                StringBuilder output = new StringBuilder();
-                ListIterator outputIterator = outputWords.listIterator();
-                if (i % 17 == 0) {
-                    while (outputIterator.hasNext()){
-                        output.insert(0, outputIterator.next());
-                    }
-                } else {
-                    while (outputIterator.hasNext()) {
-                        output.append(outputIterator.next());
-                    }
+            StringBuilder output = new StringBuilder();
+            ListIterator outputIterator = outputWords.listIterator();
+            if (i % 17 == 0) {
+                while (outputIterator.hasNext()){
+                    output.insert(0, outputIterator.next());
                 }
-                System.out.println(output);
+            } else {
+                while (outputIterator.hasNext()) {
+                    output.append(outputIterator.next());
+                }
             }
 
+            if (!output.toString().equals("")) {
+                System.out.println(output);
+            }
+            else {
+                System.out.println(i);
+            }
         }
     }
 }
