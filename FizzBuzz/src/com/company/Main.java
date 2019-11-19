@@ -2,6 +2,7 @@ package com.company;
 
 import java.util.LinkedList;
 import java.util.ListIterator;
+import java.util.Iterator;
 
 public class Main {
 
@@ -28,24 +29,8 @@ public class Main {
                 outputWords.add(index, "Fezz");
             }
 
-            StringBuilder output = new StringBuilder();
-            ListIterator outputIterator = outputWords.listIterator();
-            if (i % 17 == 0) {
-                while (outputIterator.hasNext()){
-                    output.insert(0, outputIterator.next());
-                }
-            } else {
-                while (outputIterator.hasNext()) {
-                    output.append(outputIterator.next());
-                }
-            }
+            System.out.println(buildOutputString(i, outputWords));
 
-            if (output.toString().isEmpty()) {
-                System.out.println(i);
-            }
-            else {
-                System.out.println(output);
-            }
         }
     }
 
@@ -59,5 +44,26 @@ public class Main {
             } else index++;
         }
         return index;
+    }
+
+    static String buildOutputString(int i, LinkedList<String> outputWords) {
+        StringBuilder output = new StringBuilder();
+        Iterator outputIterator;
+        if (i % 17 == 0) {
+            outputIterator = outputWords.descendingIterator();
+        } else {
+            outputIterator = outputWords.listIterator();
+        }
+
+        while (outputIterator.hasNext()){
+            output.append(outputIterator.next());
+        }
+
+        if (output.toString().isEmpty()) {
+            return String.format("%d", i);
+        }
+        else {
+            return output.toString();
+        }
     }
 }
