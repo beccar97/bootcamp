@@ -24,11 +24,8 @@ public class Main {
             }
 
             if (i % 13 == 0) {
-                if (outputWords.contains("Fizz")) {
-                    outputWords.add(1, "Fezz");
-                } else {
-                    outputWords.addFirst("Fezz");
-                }
+                int index = findFezzIndex(outputWords);
+                outputWords.add(index, "Fezz");
             }
 
             StringBuilder output = new StringBuilder();
@@ -43,12 +40,24 @@ public class Main {
                 }
             }
 
-            if (!output.toString().equals("")) {
-                System.out.println(output);
-            }
-            else {
+            if (output.toString().isEmpty()) {
                 System.out.println(i);
             }
+            else {
+                System.out.println(output);
+            }
         }
+    }
+
+    static int findFezzIndex(LinkedList<String> words) {
+        ListIterator wordIterator = words.listIterator();
+        int index = 0;
+        while (wordIterator.hasNext()) {
+            String word = wordIterator.next().toString();
+            if (word.charAt(0) == 'B') {
+                return index;
+            } else index++;
+        }
+        return index;
     }
 }
