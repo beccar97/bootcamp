@@ -3,11 +3,13 @@ package com.company;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Iterator;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-        for( int i = 1; i <= 260; i++) {
+        int maximumInt = getMaxInt();
+        for( int i = 1; i <= maximumInt; i++) {
             LinkedList<String> outputWords = new LinkedList<String>();
 
             if (i % 11 == 0) {
@@ -65,5 +67,13 @@ public class Main {
         else {
             return output.toString();
         }
+    }
+
+    static int getMaxInt() {
+        Scanner userInput = new Scanner(System.in);
+        System.out.println("Enter maximum number to process up to:");
+        int max = userInput.nextInt();
+
+        return max;
     }
 }
