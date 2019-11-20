@@ -19,13 +19,18 @@ public class Main {
     public static void main(String[] args) throws IOException {
         System.out.println(countSwEMails());
 
-        Map<String, Integer> domains = countDomains();
+        Boolean ignoreTopLevel = true;
+
+        Map<String, Integer> domains = countDomains(ignoreTopLevel);
         logCommonDomains(10, domains);
         logFrequentDomains(domains);
     }
 
-    private static Map<String, Integer> countDomains() throws IOException {
-        Pattern emailPattern = Pattern.compile("(?<=^|\\s)[\\w.'_%+-]+@(([\\w-]+\\.)+[\\w-]+)(?=\\s|$)");
+    private static Map<String, Integer> countDomains(Boolean ignoreTopLevel) throws IOException {
+        Pattern emailPattern = ignoreTopLevel
+                ? Pattern.compile("(?<=^|\\s)[\\w.'_%+-]+@([\\w-]+)\\.([\\w-]+\\.)*[\\w-]+(?=\\s|$)")
+                : Pattern.compile("(?<=^|\\s)[\\w.'_%+-]+@(([\\w-]+\\.)+[\\w-]+)(?=\\s|$)");
+
         HashMap<String, Integer> emailDomains = new HashMap<String, Integer>();
 
         Path filePath = Paths.get("sample.txt");
