@@ -1,5 +1,7 @@
 package com.company;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,47 +10,35 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Map.Entry.comparingByValue;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        String fileContent = readFile();
-        logCommonDomains(10, fileContent);
-        logFrequentDomains(fileContent);
+        System.out.println(countSwEMails());
+
+        Map<String, Integer> domains = countDomains();
+        logCommonDomains(10, domains);
+        logFrequentDomains(domains);
     }
 
-    private static String readFile() throws IOException {
-        Path filePath = Paths.get("sample.txt");
-
-        return Files.readString(filePath);
-    }
-
-    private static int countSwEMails(String fileContent) {
-        Pattern swEmailPattern = Pattern.compile("(?<=^|\\s)[\\w.'_%+-]+@softwire\\.com(?=$|\\s)");
-        Matcher swMatcher = swEmailPattern.matcher(fileContent);
-
-        int counter = 0;
-
-        while (swMatcher.find()) {
-            counter++;
-        }
-
-        return counter;
-    }
-
-    private static Map<String, Integer> countDomains(String fileContent) {
+    private static Map<String, Integer> countDomains() throws IOException {
         Pattern emailPattern = Pattern.compile("(?<=^|\\s)[\\w.'_%+-]+@(([\\w-]+\\.)+[\\w-]+)(?=\\s|$)");
-
-        Matcher emailMatcher = emailPattern.matcher(fileContent);
-
         HashMap<String, Integer> emailDomains = new HashMap<String, Integer>();
 
-        while (emailMatcher.find()) {
-            String domain = emailMatcher.group(1);
-            emailDomains.put(domain, emailDomains.getOrDefault(domain, 0) + 1);
-        };
+        Path filePath = Paths.get("sample.txt");
+        BufferedReader fileBufferedReader = new BufferedReader(new FileReader(String.valueOf(filePath)));
+        Stream<String> fileLines = fileBufferedReader.lines();
+
+        fileLines.forEach(line -> {
+            Matcher emailMatcher = emailPattern.matcher(line);
+            while (emailMatcher.find()) {
+                String domain = emailMatcher.group(1);
+                emailDomains.put(domain, emailDomains.getOrDefault(domain, 0) + 1);
+            }
+        });
 
         return emailDomains
                 .entrySet()
@@ -58,8 +48,20 @@ public class Main {
 
     }
 
-    private static void logCommonDomains(int n, String fileContent) {
-        Map<String, Integer> domains = countDomains(fileContent);
+    private static int countSwEMails() throws IOException {
+        Path filePath = Paths.get("sample.txt");
+        String fileContent = Files.readString(filePath);
+
+        Pattern swEmailPattern = Pattern.compile("(?<=^|\\s)[\\w.'_%+-]+@softwire\\.com(?=$|\\s)");
+        Matcher swMatcher = swEmailPattern.matcher(fileContent);
+
+        int counter = 0;
+        while (swMatcher.find()) counter++;
+
+        return counter;
+    }
+
+    private static void logCommonDomains(int n, Map<String, Integer> domains) {
         String[] domainArray = domains.keySet().toArray(new String[0]);
 
         System.out.println(String.format("The %d most common domains are:", n));
@@ -69,9 +71,7 @@ public class Main {
         }
     }
 
-    private static void logFrequentDomains(String fileContent) {
-        Map<String, Integer> domains = countDomains(fileContent);
-
+    private static void logFrequentDomains(Map<String, Integer> domains) {
         Scanner userInput = new Scanner(System.in);
         System.out.println("Enter minimum frequency:");
         int freq = userInput.nextInt();
