@@ -3,6 +3,8 @@ package com.company;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,24 +19,31 @@ import static java.util.Map.Entry.comparingByValue;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        System.out.println(countSwEMails());
+//        System.out.println(countSwEMails());
 
-        Boolean ignoreTopLevel = true;
+        Boolean ignoreTopLevel = false;
+        String webSource = "";
 
-        Map<String, Integer> domains = countDomains(ignoreTopLevel);
+        Map<String, Integer> domains = countDomains(ignoreTopLevel, webSource);
         logCommonDomains(10, domains);
-        logFrequentDomains(domains);
+//        logFrequentDomains(domains);
     }
 
-    private static Map<String, Integer> countDomains(Boolean ignoreTopLevel) throws IOException {
+    private static Map<String, Integer> countDomains(Boolean ignoreTopLevel, String webSource) throws IOException {
         Pattern emailPattern = ignoreTopLevel
                 ? Pattern.compile("(?<=^|\\s)[\\w.'_%+-]+@([\\w-]+)\\.([\\w-]+\\.)*[\\w-]+(?=\\s|$)")
                 : Pattern.compile("(?<=^|\\s)[\\w.'_%+-]+@(([\\w-]+\\.)+[\\w-]+)(?=\\s|$)");
 
         HashMap<String, Integer> emailDomains = new HashMap<String, Integer>();
+        BufferedReader fileBufferedReader;
 
-        Path filePath = Paths.get("sample.txt");
-        BufferedReader fileBufferedReader = new BufferedReader(new FileReader(String.valueOf(filePath)));
+        if (webSource.isEmpty()) {
+            Path filePath = Paths.get("sample.txt");
+            fileBufferedReader = new BufferedReader(new FileReader(String.valueOf(filePath)));
+        } else {
+            URL source = new URL(webSource);
+            fileBufferedReader = new BufferedReader(new InputStreamReader(source.openStream()));
+        }
         Stream<String> fileLines = fileBufferedReader.lines();
 
         fileLines.forEach(line -> {
@@ -69,7 +78,7 @@ public class Main {
     private static void logCommonDomains(int n, Map<String, Integer> domains) {
         String[] domainArray = domains.keySet().toArray(new String[0]);
 
-        System.out.println(String.format("The %d most common domains are:", n));
+        System.out.println(String.format("The %d most common domains are:", Math.min(n, domainArray.length)));
 
         for (int i = 0; i < n && i < domainArray.length; i++) {
             System.out.println(String.format("%s: %d occurrences", domainArray[i], domains.get(domainArray[i])));
