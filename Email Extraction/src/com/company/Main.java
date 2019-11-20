@@ -4,17 +4,20 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import static java.util.Map.Entry.comparingByValue;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
         String fileContent = readFile();
-
-        int swEmailCount = countSwEMails(fileContent);
-        System.out.println(swEmailCount);
 
         Pattern emailPattern = Pattern.compile("\\b[\\w.'_%+-]+@(([\\w-]+\\.)+[\\w-]+)\\b");
         Matcher emailMatcher = emailPattern.matcher(fileContent);
@@ -26,7 +29,13 @@ public class Main {
             emailDomains.put(domain, emailDomains.getOrDefault(domain, 0) + 1);
         };
 
-        System.out.println(emailDomains);
+        Map<String, Integer> sorted = emailDomains
+                .entrySet()
+                .stream()
+                .sorted(Collections.reverseOrder(comparingByValue()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+
+        System.out.println(sorted);
 
 
     }
@@ -40,7 +49,7 @@ public class Main {
     }
 
     static int countSwEMails(String fileContent) {
-        Pattern swEmailPattern = Pattern.compile("\\s[\\w.'_%+-]+@softwire\\.com\\s");
+        Pattern swEmailPattern = Pattern.compile("\\b[\\w.'_%+-]+@softwire\\.com\\b");
         Matcher swMatcher = swEmailPattern.matcher(fileContent);
 
         int counter = 0;
