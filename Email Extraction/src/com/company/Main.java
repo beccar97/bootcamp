@@ -15,18 +15,18 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         String fileContent = readFile();
-
+        logCommonDomains(10, fileContent);
         logFrequentDomains(fileContent);
     }
 
-    static String readFile() throws IOException {
+    private static String readFile() throws IOException {
         Path filePath = Paths.get("sample.txt");
 
         return Files.readString(filePath);
     }
 
-    static int countSwEMails(String fileContent) {
-        Pattern swEmailPattern = Pattern.compile("\\b[\\w.'_%+-]+@softwire\\.com\\b");
+    private static int countSwEMails(String fileContent) {
+        Pattern swEmailPattern = Pattern.compile("(?<=^|\\s)[\\w.'_%+-]+@softwire\\.com(?=$|\\s)");
         Matcher swMatcher = swEmailPattern.matcher(fileContent);
 
         int counter = 0;
@@ -38,8 +38,9 @@ public class Main {
         return counter;
     }
 
-    static Map<String, Integer> countDomains(String fileContent) {
-        Pattern emailPattern = Pattern.compile("\\b[\\w.'_%+-]+@(([\\w-]+\\.)+[\\w-]+)\\b");
+    private static Map<String, Integer> countDomains(String fileContent) {
+        Pattern emailPattern = Pattern.compile("(?<=^|\\s)[\\w.'_%+-]+@(([\\w-]+\\.)+[\\w-]+)(?=\\s|$)");
+
         Matcher emailMatcher = emailPattern.matcher(fileContent);
 
         HashMap<String, Integer> emailDomains = new HashMap<String, Integer>();
@@ -49,16 +50,15 @@ public class Main {
             emailDomains.put(domain, emailDomains.getOrDefault(domain, 0) + 1);
         };
 
-        Map<String, Integer> sorted = emailDomains
+        return emailDomains
                 .entrySet()
                 .stream()
                 .sorted(Collections.reverseOrder(comparingByValue()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
-        return sorted;
     }
 
-    static void logCommonDomains(int n, String fileContent) {
+    private static void logCommonDomains(int n, String fileContent) {
         Map<String, Integer> domains = countDomains(fileContent);
         String[] domainArray = domains.keySet().toArray(new String[0]);
 
@@ -69,7 +69,7 @@ public class Main {
         }
     }
 
-    static void logFrequentDomains(String fileContent) {
+    private static void logFrequentDomains(String fileContent) {
         Map<String, Integer> domains = countDomains(fileContent);
 
         Scanner userInput = new Scanner(System.in);
@@ -81,6 +81,5 @@ public class Main {
         domains.forEach((domain,frequency) -> {
             if (frequency >= freq) System.out.println(String.format("%s: %d occurrences", domain, frequency));
         });
-
     }
 }
