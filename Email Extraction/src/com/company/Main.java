@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -19,15 +16,13 @@ public class Main {
     public static void main(String[] args) throws IOException {
         String fileContent = readFile();
 
-        logCommonDomains(10, fileContent);
+        logFrequentDomains(fileContent);
     }
 
     static String readFile() throws IOException {
         Path filePath = Paths.get("sample.txt");
 
-        String content = Files.readString(filePath);
-
-        return content;
+        return Files.readString(filePath);
     }
 
     static int countSwEMails(String fileContent) {
@@ -65,12 +60,27 @@ public class Main {
 
     static void logCommonDomains(int n, String fileContent) {
         Map<String, Integer> domains = countDomains(fileContent);
-        String[] domainArray = domains.keySet().toArray(new String[domains.keySet().size()]);
+        String[] domainArray = domains.keySet().toArray(new String[0]);
 
-        System.out.println(String.format("The %d most common domains are:\n", n));
+        System.out.println(String.format("The %d most common domains are:", n));
 
         for (int i = 0; i < n && i < domainArray.length; i++) {
             System.out.println(String.format("%s: %d occurrences", domainArray[i], domains.get(domainArray[i])));
         }
+    }
+
+    static void logFrequentDomains(String fileContent) {
+        Map<String, Integer> domains = countDomains(fileContent);
+
+        Scanner userInput = new Scanner(System.in);
+        System.out.println("Enter minimum frequency:");
+        int freq = userInput.nextInt();
+
+        System.out.println(String.format("Domains occurring with frequency greater than %d", freq));
+
+        domains.forEach((domain,frequency) -> {
+            if (frequency >= freq) System.out.println(String.format("%s: %d occurrences", domain, frequency));
+        });
+
     }
 }
