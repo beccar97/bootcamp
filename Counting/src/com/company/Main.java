@@ -45,5 +45,12 @@ public class Main {
         System.out.println(String.format("Number of items in cart 2: %d", cart2BoxCounter.getCount()));
         System.out.println(String.format("Number of items in carts: %d", cartCounter.getCount()));
 
+
+        Counter<Countable> generalCounter = new Counter<>();
+        generalCounter.add(apple1);
+        generalCounter.add(cart2);
+        generalCounter.addContainer(appleBox);
+        generalCounter.addContainer(cart2);
+
     }
 }
