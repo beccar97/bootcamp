@@ -45,12 +45,14 @@ public class Main {
         System.out.println(String.format("Number of items in cart 2: %d", cart2BoxCounter.getCount()));
         System.out.println(String.format("Number of items in carts: %d", cartCounter.getCount()));
 
+        Caravan caravan = new Caravan();
+        caravan.addItem(cart1);
+        caravan.addItem(cart2);
 
         Counter<Countable> generalCounter = new Counter<>();
         generalCounter.add(apple1);
         generalCounter.add(cart2);
-        generalCounter.addContainer(appleBox);
-        generalCounter.addContainer(cart2);
+//        generalCounter.addContainer(appleBox); Fails because appleBox is of type Box<Apple> not Box<Countable>
 
     }
 }
