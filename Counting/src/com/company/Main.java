@@ -5,12 +5,48 @@ import com.company.models.*;
 public class Main {
 
     public static void main(String[] args) {
-        Apple apple1 = new Apple();
-        Apple apple2 = new Apple();
+        Counter<Countable> appleCounter = new Counter<>();
+        Counter<Apple> redAppleCounter = new Counter<>(apple -> apple.getColour() == AppleColour.RED);
+
+        Box<Countable> appleBox = new Box<>();
+        for (int i = 0; i <= 5; i++) {
+            appleBox.addItem(createRedApple());
+            appleBox.addItem(createGreenApple());
+            appleBox.addItem(createYellowApple());
+            appleBox.addItem(createGoldenApple());
+            appleBox.addItem(new Orange());
+        }
+
+        appleCounter.addContainer(appleBox);
+//        redAppleCounter.addContainer(appleBox);
+
+        System.out.println(String.format("Total number of apples: %d", appleCounter.getCount()));
+        System.out.println(String.format("Number of red apples: %d", redAppleCounter.getCount()));
+    }
+
+    private static Apple createRedApple() {
+        return new Apple(AppleColour.RED);
+    }
+
+    private static Apple createGreenApple() {
+        return new Apple(AppleColour.GREEN);
+    }
+
+    private static Apple createYellowApple() {
+        return new Apple(AppleColour.YELLOW);
+    }
+
+    private static Apple createGoldenApple() {
+        return new Apple(AppleColour.GOLDEN);
+    }
+
+    private void original() {
+        Apple apple1 = new Apple(AppleColour.RED);
+        Apple apple2 = new Apple(AppleColour.RED);
 
         Orange orange1 = new Orange();
         Orange orange2 = new Orange();
-        Orange orange3= new Orange();
+        Orange orange3 = new Orange();
 
         Box<Apple> appleBox = new Box<>();
         appleBox.addItem(apple1);
