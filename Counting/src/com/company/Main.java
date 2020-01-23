@@ -5,20 +5,19 @@ import com.company.models.*;
 public class Main {
 
     public static void main(String[] args) {
-        Counter<Countable> appleCounter = new Counter<>();
+        Counter<Apple> appleCounter = new Counter<>();
         Counter<Apple> redAppleCounter = new Counter<>(apple -> apple.getColour() == AppleColour.RED);
 
-        Box<Countable> appleBox = new Box<>();
+        Box<Apple> appleBox = new Box<>();
         for (int i = 0; i <= 5; i++) {
             appleBox.addItem(createRedApple());
             appleBox.addItem(createGreenApple());
             appleBox.addItem(createYellowApple());
             appleBox.addItem(createGoldenApple());
-            appleBox.addItem(new Orange());
         }
 
         appleCounter.addContainer(appleBox);
-//        redAppleCounter.addContainer(appleBox);
+        redAppleCounter.addContainer(appleBox);
 
         System.out.println(String.format("Total number of apples: %d", appleCounter.getCount()));
         System.out.println(String.format("Number of red apples: %d", redAppleCounter.getCount()));

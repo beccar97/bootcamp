@@ -3,8 +3,12 @@ package com.company.models;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
-public abstract class Container<T extends Countable> implements Countable {
+public abstract class Container<T> implements Countable {
+    private Predicate<T> countableFilter = item -> item instanceof Countable;
+
     private List<T> contents = new ArrayList<>();
 
     public void addItem(T item) {
@@ -12,7 +16,8 @@ public abstract class Container<T extends Countable> implements Countable {
     }
 
     public int getCount() {
-        return contents.stream().mapToInt(T::getCount).sum();
+        List<Countable> countables = contents.stream().filter(countableFilter).map(item -> (Countable) item).collect(Collectors.toList());
+        return countables.stream().mapToInt(Countable::getCount).sum() + (contents.size() - countables.size());
     }
 
     public List<T> getContents() {

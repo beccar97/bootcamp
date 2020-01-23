@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class Counter<T extends Countable> {
-    private Predicate<T> filter = item -> true;
+public class Counter<T> {
+    private Predicate<T> countableFilter = item -> item instanceof Countable;
+    private Predicate<T> filter = countableFilter;
 
     private List<T> items = new ArrayList<>();
 
@@ -13,7 +14,7 @@ public class Counter<T extends Countable> {
     }
 
     public Counter(Predicate<T> filter) {
-        this.filter = filter;
+        this.filter = countableFilter.and(filter);
     }
 
     public void add(T item){
@@ -25,7 +26,7 @@ public class Counter<T extends Countable> {
     }
 
     public int getCount() {
-        return items.stream().filter(filter).mapToInt(Countable::getCount).sum();
+        return items.stream().filter(filter).map(item -> (Countable) item).mapToInt(Countable::getCount).sum();
     }
 
     public int getShallowCount() {
