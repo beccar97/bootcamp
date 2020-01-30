@@ -1,21 +1,21 @@
 package com.company;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SelectionSort{
+    // Note this actually sorts the original list in place
 
     public static List<Integer> sort(List<Integer> list) {
         if (list.size() > 1) {
             int indexOfSmallest = findSmallest(list);
             Integer temp = list.get(indexOfSmallest);
             list.set(indexOfSmallest, list.get(0));
+            list.set(0, temp);
 
-            List<Integer> sortedSubList = sort(list.subList(1, list.size()));
-            sortedSubList.add(0, temp);
+            sort(list.subList(1, list.size()));
 
-            return sortedSubList;
-        } else return list;
+        }
+        return list;
     };
 
     private static int findSmallest(List<Integer> list) {

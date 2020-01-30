@@ -3,7 +3,7 @@ package com.company;
 import java.util.List;
 
 public class InsertionSort {
-
+    // Note this sorts the original list in place
     public static List<Integer> sort(List<Integer> list) {
         int sortedTo = 0;
 
