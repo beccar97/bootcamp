@@ -1,8 +1,9 @@
 package com.company;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class SelectionSort {
+public class SelectionSort{
 
     public static List<Integer> sort(List<Integer> list) {
         if (list.size() > 1) {
@@ -23,5 +24,4 @@ public class SelectionSort {
             return index;
         });
     }
-
 }
