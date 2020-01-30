@@ -24,4 +24,12 @@ public class SelectionSort{
             return index;
         });
     }
+
+    public static double timeSort(List<Integer> list) {
+        long startTime = System.nanoTime();
+        sort(list);
+        long endTime = System.nanoTime();
+
+        return ((double)endTime - startTime) / 1_000_000;
+    }
 }

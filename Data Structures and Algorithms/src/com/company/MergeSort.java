@@ -16,6 +16,15 @@ public class MergeSort {
 
     }
 
+
+    public static double timeSort(List<Integer> list) {
+        long startTime = System.nanoTime();
+        sort(list);
+        long endTime = System.nanoTime();
+
+        return ((double)endTime - startTime) / 1_000_000;
+    }
+
     private static List<Integer> mergeLists(List<Integer> list1, List<Integer> list2) {
         List<Integer> mergedList = new ArrayList<>();
         int i = 0, j = 0;

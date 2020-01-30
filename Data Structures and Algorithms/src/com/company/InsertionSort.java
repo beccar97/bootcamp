@@ -15,6 +15,14 @@ public class InsertionSort {
         return list;
     }
 
+    public static double timeSort(List<Integer> list) {
+        long startTime = System.nanoTime();
+        sort(list);
+        long endTime = System.nanoTime();
+
+        return ((double)endTime - startTime) / 1_000_000;
+    }
+
     private static void sortBelow(List<Integer> list, int index) {
         while (index > 0 && list.get(index) < list.get(index - 1)) {
             swap(list, index, index - 1);
